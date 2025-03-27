@@ -14,9 +14,9 @@ Follow these steps to set up and run the project locally:
 
 ### 2. Setup
 - Clone this repository to your local machine:
-```bash
-git clone https://github.com/rolling-sagas/rolls.git
-```
+  ```bash
+  git clone https://github.com/rolling-sagas/rolls.git
+  ```
 - Navigate to the project folder and run:
   ```bash
   cd rolls
