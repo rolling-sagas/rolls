@@ -1,6 +1,10 @@
 # Rolls
 A scriptable AI game engine built with [React](https://react.dev/) and [Vite](https://vite.dev/).
 
+## Test it online:
+- Browse [rollingsagas.com](https://rollingsagas.com) to play.
+- Or visit the standalone [editor](https://react-rolls.rollingsgas.com).
+
 ## Getting Started
 Follow these steps to set up and run the project locally:
 
