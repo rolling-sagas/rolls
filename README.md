@@ -33,7 +33,7 @@ Follow these steps to set up and run the project locally:
 - Click the "Import" button in the top-left corner of the page.
 - Upload a template file (`.zip`) to get started.
 
-### 5. Optional: Deploy Online
+### 5. (Optional) Deploy Online
 - Install [Wrangler](https://developers.cloudflare.com/workers/get-started/guide/).
 - Follow the Wrangler guide to deploy the app to the web.
 
