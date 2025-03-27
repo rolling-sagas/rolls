@@ -1,0 +1,64 @@
+@import "../../index.css";
+
+.msg {
+	@apply px-6 py-4 not-last:border-b-[0.5px] rs-outline-column
+}
+
+.msg-content {
+	@apply rs-text-charcoal flex flex-col gap-4;
+}
+
+.msg:not(:last-child) .input-container {
+  @apply hidden;
+}
+
+.msg:not(:last-child) {
+  @apply min-h-full!;
+}
+
+.msg-hbox {
+  @apply flex gap-4;
+}
+
+.msg-vbox {
+  @apply flex flex-col gap-4;
+}
+
+.msg-image-container {
+  @apply rounded-[8px];
+}
+
+.msg-image {
+  @apply rounded-[12px];
+  float: left;
+  /*aspect-ratio: 1 / 1;*/    /* Sets a 1:1 aspect ratio */
+  object-fit: cover;      /* Ensures image fills the space while maintaining ratio */
+  width: 100%;           /* Makes image responsive to container */
+}
+
+.msg-image:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+  float: left;
+}
+
+.msg-option label {
+	@apply border-[0.5px] flex items-center justify-start px-3 py-2 rounded-[12px] cursor-pointer w-full;
+}
+
+.msg-option input {
+	@apply hidden;
+}
+
+.msg-input {
+	@apply w-full flex px-3 py-2 border-[0.5px] rounded-[12px] rs-bg-secondary outline-none;
+}
+
+.msg-button {
+	@apply border-[0.5px] flex items-center justify-start px-3 py-2 rounded-[12px] cursor-pointer font-semibold;
+}
+
+.msg-hidden {
+	@apply hidden;
+}

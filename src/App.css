@@ -1,0 +1,12 @@
+@import "./index.css";
+
+body {
+	@apply font-default box-border antialiased rs-bg-secondary text-[15px] leading-[21px] rs-text-primary transition-colors;
+	scrollbar-width: none;
+	overscroll-behavior-x: none;
+	scrollbar-color: var(--outline-column) var(--background-secondary);
+}
+
+#dice-box canvas {
+	@apply absolute inset-0 w-full h-full;
+}

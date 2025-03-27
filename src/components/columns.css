@@ -1,0 +1,14 @@
+.column:only-child {
+	width: 100%;
+	scrollbar-width: none;
+}
+
+.column:first-child:nth-last-child(2),
+.column:first-child:nth-last-child(2) ~ .column {
+	width: 34vw;
+}
+
+.column:first-child:nth-last-child(3),
+.column:first-child:nth-last-child(3) ~ .column {
+	width: 26vw;
+}

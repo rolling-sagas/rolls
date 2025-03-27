@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@layer base {
+	:root {
+    --font-default: system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    --outline-column: rgb(214, 213, 213);
+    --outline-primary: rgba(0, 0, 0, 0.15);
+
+    --text-primary: rgb(0, 0, 0);
+    --text-secondary: rgb(100, 100, 100);
+		--text-charcoal: rgb(66, 66, 66);
+
+    --background-primary: rgb(255, 255, 255);
+    --background-secondary: rgb(250, 250, 250);
+		--background-hovered: rgba(0, 0, 0, 0.04);
+		--background-pressed: rgba(0, 0, 0, 0.06);
+		--background-backdrop: rgba(16, 16, 16, 0.85);
+  }
+
+  .dark {
+    --outline-column: rgb(45, 45, 45);
+    --outline-primary: rgba(243, 245, 247, 0.15);
+
+    --text-primary: rgb(243, 245, 247);
+    --text-secondary: rgb(153, 153, 153);
+		--text-charcoal: rgb(204, 204, 204);
+
+    --background-primary: rgb(16, 16, 16);
+    --background-secondary: rgb(10, 10, 10);
+		--background-hovered: rgba(255, 255, 255, 0.04);
+		--background-pressed: rgba(0, 0, 0, 0.06);
+  }
+  
+  * {
+    border-color: var(--outline-column, currentColor);
+  }
+}
+
+@theme inline{
+	--outline-column: var(--outline-primary);
+	--outline-primary: var(--outline-primary);
+  --font-default: var(--font-default);
+  --text-primary: var(--text-primary);
+  --text-secondary: var(--text-secondary);
+  --text-charcoal: var(--text-charcoal);
+  --background-primary: var(--background-primary);
+  --background-secondary: var(--background-secondary);
+  --background-hovered: var(--background-hovered);
+  --background-pressed: var(--background-pressed);
+  --background-backdrop: var(--background-backdrop);
+}
+
+@utility rs-outline-* {
+  border-color: --value(--outline-*);
+}
+
+@utility rs-text-* {
+  color: --value(--text-*);
+}
+
+@utility rs-bg-* {
+  background-color: --value(--background-*);
+}
+
+@layer components {
+  button {
+    @apply cursor-pointer;
+  }
+}
