@@ -1,5 +1,6 @@
 # Rolls
 A scriptable AI game engine built with [React](https://react.dev/) and [Vite](https://vite.dev/).
+![screenshot](https://github.com/rolling-sagas/rolls/blob/main/screenshot.png?raw=true))
 
 ## Play It Online
 - Visit [rollingsagas.com](https://rollingsagas.com) to play.
