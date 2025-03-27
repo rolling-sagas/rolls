@@ -1,5 +1,5 @@
-# React Rolls
-A lightweight AI-powered game engine built with [React](https://react.dev/) and [Vite](https://vite.dev/).
+# Rolls
+A scriptable AI game engine built with [React](https://react.dev/) and [Vite](https://vite.dev/).
 
 ## Getting Started
 Follow these steps to set up and run the project locally:
