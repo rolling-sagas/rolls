@@ -107,7 +107,7 @@ async function streamOpenAI(messages, onMessage, key, model) {
 					onMessage(event.delta);
 					break;
 				case "error" || "response.error":
-					throw new LlmStreamError(event.message);
+					throw new LlmStreamError(event.code + ": " + event.message);
 				case "response.failed":
 					throw new LlmStreamError("Response failed");
 			}
@@ -139,7 +139,7 @@ async function streamDeepSeek(messages, onMessage, key, model) {
 					onMessage(event.delta);
 					break;
 				case "error" || "response.error":
-					throw new LlmStreamError(event.message);
+					throw new LlmStreamError(event.code + ": " + event.message);
 				case "response.failed":
 					throw new LlmStreamError("Response failed");
 			}
