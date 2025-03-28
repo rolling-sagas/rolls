@@ -1,10 +1,17 @@
 import variant from "https://cdn.jsdelivr.net/npm/@jitl/quickjs-singlefile-browser-release-sync@0.31.0/+esm";
-import { newQuickJSWASMModuleFromVariant } from "quickjs-emscripten-core";
+import { newQuickJSWASMModuleFromVariant } from "https://cdn.jsdelivr.net/npm/quickjs-emscripten-core@0.31.0/+esm";
 import Handlebars from "https://cdn.jsdelivr.net/npm/handlebars@4.7.8/+esm";
 import { DiceRoll } from "https://cdn.jsdelivr.net/npm/@dice-roller/rpg-dice-roller@5.5.1/+esm";
 
 import { parse } from "smol-toml";
 import { isEntry } from "@/components/messages/actions";
+
+export class ScriptEvalError extends Error {
+	constructor({ name, message }) {
+		super(message);
+		this.name = name;
+	}
+}
 
 export default class QuickJS {
 	runtime;
@@ -21,7 +28,7 @@ export default class QuickJS {
 
 		const log = ctx.newFunction("log", (...args) => {
 			const nativeArgs = args.map((arg) => ctx.dump(arg));
-			console.log("QuickJS:", ...nativeArgs);
+			console.log("[QuickJS]", ...nativeArgs);
 		});
 
 		// load config from configs by name
@@ -31,6 +38,7 @@ export default class QuickJS {
 			if (!config) {
 				throw new Error("Config not found: " + configName);
 			}
+			// parse the toml content
 			const parsed = parse(config.content);
 			return ctx.newString(JSON.stringify(parsed));
 		});
@@ -75,7 +83,10 @@ export default class QuickJS {
 				(mod) => mod.name === scriptName.split("/").pop(),
 			);
 			if (!script) {
-				throw new Error(`Script not found: ${scriptName}`);
+				throw new ScriptEvalError({
+					name: "Script Not Found",
+					message: `Script not found: ${scriptName}, please check the import script name.`,
+				});
 			}
 			return script.content;
 		});
@@ -84,13 +95,16 @@ export default class QuickJS {
 		this.setupConsole(configs);
 	}
 
-	async run(scripts, configs, dispose = true) {
+	async run(scripts, configs) {
 		await this.initial(scripts, configs);
 		const entryModule = scripts.find((s) => isEntry(s.content));
 		// console.log(entryModule);
 
 		if (!entryModule) {
-			throw new Error("Entry module not found in the scripts.");
+			throw new ScriptEvalError({
+				name: "Entry Module Not Found",
+				message: "Entry module not found, please check the entry module.",
+			});
 		}
 
 		const execRes = this.context.evalCode(
@@ -105,23 +119,29 @@ export default class QuickJS {
 			// no need to dispose the execRes if unwrapped
 			const unwrapped = this.context.unwrapResult(execRes);
 			this.evalResult = unwrapped;
-			console.log(this.context.dump(this.evalResult));
-			if (dispose) {
-				this.destroy();
-			}
+			// console.log(this.context.dump(this.evalResult));
 		} catch (e) {
 			this.destroy();
-			throw e;
+			throw new ScriptEvalError({
+				name: "Script Eval Error",
+				message: e.message,
+			});
 		}
 	}
 
 	callMethod(fnName, data) {
 		if (!this.context) {
-			throw new Error("Context not initialized.");
+			throw new ScriptEvalError({
+				name: "Context Not Initialized",
+				message: "Context not initialized, please run the script first.",
+			});
 		}
 
 		if (!this.evalResult) {
-			throw new Error("Eval result not found.");
+			throw new ScriptEvalError({
+				name: "Eval Result Not Found",
+				message: "Eval result not found, please run the script first.",
+			});
 		}
 
 		const scriptHandle = this.context.getProp(this.evalResult, "default");
@@ -130,7 +150,7 @@ export default class QuickJS {
 			throw new ScriptEvalError({
 				name: "Default Script Not Exported",
 				stack: "You need export a default instance in the entry point.",
-				message: "Default script not exported",
+				message: "Default class instance not exported",
 			});
 		}
 		let dataHandle;
@@ -154,7 +174,10 @@ export default class QuickJS {
 			callResult.dispose();
 			return dumpedData;
 		} catch (e) {
-			throw e;
+			throw new ScriptEvalError({
+				name: "Method Call Error",
+				message: e.message,
+			});
 		} finally {
 			if (dataHandle) dataHandle.dispose();
 			scriptHandle.dispose();
