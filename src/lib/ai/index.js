@@ -73,18 +73,6 @@ function filterMessages(messages) {
 	});
 }
 
-async function handleApiResponse(response) {
-	if (!response.ok) {
-		let errorDetails = await response.json().catch(() => null);
-		const errorMessage =
-			errorDetails?.error?.message ||
-			response.statusText ||
-			"Unknown error occurred.";
-		throw new LlmStreamError(errorMessage);
-	}
-	return response;
-}
-
 async function streamWithTimeout(streamFunction) {
 	return await Promise.race([
 		streamFunction(),
@@ -106,21 +94,22 @@ async function streamOpenAI(messages, onMessage, key, model) {
 	const client = new OpenAI({ apiKey: key, dangerouslyAllowBrowser: true });
 
 	try {
-		const runner = await handleApiResponse(
-			client.beta.chat.completions.stream({
-				model,
-				messages,
-				stream: true,
-				response_format: { type: "json_object" },
-			}),
-		);
+		const stream = await client.responses.create({
+			model,
+			input: messages,
+			stream: true,
+			text: { format: { type: "json_object" } },
+		});
 
-		for await (const chunk of runner) {
-			if (chunk.choices[0].delta.content?.trim()) {
-				onMessage(chunk.choices[0].delta.content);
-			}
-			if (chunk.error) {
-				throw new LlmStreamError(chunk.error);
+		for await (const event of stream) {
+			switch (event.type) {
+				case "response.output_text.delta":
+					onMessage(event.delta);
+					break;
+				case "error" || "response.error":
+					throw new LlmStreamError(event.message);
+				case "response.failed":
+					throw new LlmStreamError("Response failed");
 			}
 		}
 	} catch (error) {
@@ -137,21 +126,22 @@ async function streamDeepSeek(messages, onMessage, key, model) {
 	});
 
 	try {
-		const runner = await handleApiResponse(
-			client.beta.chat.completions.stream({
-				model,
-				messages,
-				stream: true,
-				response_format: { type: "json_object" },
-			}),
-		);
+		const stream = await client.responses.create({
+			model,
+			input: messages,
+			stream: true,
+			text: { format: { type: "json_object" } },
+		});
 
-		for await (const chunk of runner) {
-			if (chunk.choices[0].delta.content?.trim()) {
-				onMessage(chunk.choices[0].delta.content);
-			}
-			if (chunk.error) {
-				throw new LlmStreamError(chunk.error);
+		for await (const event of stream) {
+			switch (event.type) {
+				case "response.output_text.delta":
+					onMessage(event.delta);
+					break;
+				case "error" || "response.error":
+					throw new LlmStreamError(event.message);
+				case "response.failed":
+					throw new LlmStreamError("Response failed");
 			}
 		}
 	} catch (error) {
@@ -168,21 +158,19 @@ async function streamAnthropic(messages, onMessage, key, model) {
 	);
 
 	try {
-		const stream = await handleApiResponse(
-			client.messages.create({
-				messages,
-				max_tokens: 4096,
-				model,
-				stream: true,
-			}),
-		);
+		const stream = await client.messages.create({
+			messages,
+			max_tokens: 4096,
+			model,
+			stream: true,
+		});
 
 		for await (const event of stream) {
 			if (event.type === "content_block_delta") {
 				onMessage(event.delta.text);
 			}
 			if (event.error) {
-				throw new LlmStreamError(event.error);
+				throw new LlmStreamError(event.error.type + ": " + event.error.message);
 			}
 		}
 	} catch (error) {
