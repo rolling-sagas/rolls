@@ -5,6 +5,8 @@ import Anthropic from "https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.39.0/+es
 export class LlmStreamError extends Error {
 	constructor(message) {
 		super(message);
+		this.type = "LLmStreamError";
+		this.name = "LLmStreamError";
 	}
 }
 
@@ -93,28 +95,24 @@ async function streamWithTimeout(streamFunction) {
 async function streamOpenAI(messages, onMessage, key, model) {
 	const client = new OpenAI({ apiKey: key, dangerouslyAllowBrowser: true });
 
-	try {
-		const stream = await client.responses.create({
-			model,
-			input: messages,
-			stream: true,
-			text: { format: { type: "json_object" } },
-		});
+	const stream = await client.responses.create({
+		model,
+		input: messages,
+		stream: true,
+		max_tokens: 4096,
+		text: { format: { type: "json_object" } },
+	});
 
-		for await (const event of stream) {
-			switch (event.type) {
-				case "response.output_text.delta":
-					onMessage(event.delta);
-					break;
-				case "error" || "response.error":
-					throw new LlmStreamError(event.code + ": " + event.message);
-				case "response.failed":
-					throw new LlmStreamError("Response failed");
-			}
+	for await (const event of stream) {
+		switch (event.type) {
+			case "response.output_text.delta":
+				onMessage(event.delta);
+				break;
+			case "error" || "response.error":
+				throw new LlmStreamError(event.code + ": " + event.message);
+			case "response.failed":
+				throw new LlmStreamError("Response failed");
 		}
-	} catch (error) {
-		console.error(error);
-		throw error;
 	}
 }
 
@@ -122,31 +120,27 @@ async function streamDeepSeek(messages, onMessage, key, model) {
 	const client = new OpenAI({
 		baseURL: "https://api.deepseek.com",
 		apiKey: key,
+		max_tokens: 4096,
 		dangerouslyAllowBrowser: true,
 	});
 
-	try {
-		const stream = await client.responses.create({
-			model,
-			input: messages,
-			stream: true,
-			text: { format: { type: "json_object" } },
-		});
+	const stream = await client.responses.create({
+		model,
+		input: messages,
+		stream: true,
+		text: { format: { type: "json_object" } },
+	});
 
-		for await (const event of stream) {
-			switch (event.type) {
-				case "response.output_text.delta":
-					onMessage(event.delta);
-					break;
-				case "error" || "response.error":
-					throw new LlmStreamError(event.code + ": " + event.message);
-				case "response.failed":
-					throw new LlmStreamError("Response failed");
-			}
+	for await (const event of stream) {
+		switch (event.type) {
+			case "response.output_text.delta":
+				onMessage(event.delta);
+				break;
+			case "error" || "response.error":
+				throw new LlmStreamError(event.code + ": " + event.message);
+			case "response.failed":
+				throw new LlmStreamError("Response failed");
 		}
-	} catch (error) {
-		console.error(error);
-		throw error;
 	}
 }
 
@@ -157,24 +151,19 @@ async function streamAnthropic(messages, onMessage, key, model) {
 		msg.role === "system" ? { ...msg, role: "user" } : msg,
 	);
 
-	try {
-		const stream = await client.messages.create({
-			messages,
-			max_tokens: 4096,
-			model,
-			stream: true,
-		});
+	const stream = await client.messages.create({
+		messages,
+		max_tokens: 4096,
+		model,
+		stream: true,
+	});
 
-		for await (const event of stream) {
-			if (event.type === "content_block_delta") {
-				onMessage(event.delta.text);
-			}
-			if (event.error) {
-				throw new LlmStreamError(event.error.type + ": " + event.error.message);
-			}
+	for await (const event of stream) {
+		if (event.type === "content_block_delta") {
+			onMessage(event.delta.text);
 		}
-	} catch (error) {
-		console.error(error);
-		throw error;
+		if (event.error) {
+			throw new LlmStreamError(event.error.type + ": " + event.error.message);
+		}
 	}
 }
