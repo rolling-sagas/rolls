@@ -116,7 +116,7 @@ async function streamAnthropic(messages, onMessage, key, model) {
 		dangerouslyAllowBrowser: true,
 	});
 
-	// if message's role is SYSTEM, use user instead
+	// if message's role is 'system', use user instead
 	messages = messages.map((msg) => {
 		if (msg.role === "system") {
 			return { ...msg, role: "user" };
