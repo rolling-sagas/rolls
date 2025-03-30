@@ -32,11 +32,14 @@ export default class QuickJS {
 		});
 
 		// load config from configs by name
-		const loadConfig = ctx.newFunction("loadConfig", (name) => {
+		const loadConfig = ctx.newFunction("load", (name) => {
 			const configName = ctx.dump(name);
 			const config = configs.find((conf) => conf.name === configName);
 			if (!config) {
-				throw new Error("Config not found: " + configName);
+				throw new ScriptEvalError({
+					name: "Config Not Found",
+					message: `Config not found: ${configName}, please check the config name.`,
+				});
 			}
 			// parse the toml content
 			const parsed = parse(config.content);
@@ -44,14 +47,14 @@ export default class QuickJS {
 		});
 
 		// render the message's content with handlebars
-		const renderTemplate = ctx.newFunction("renderContent", (content, data) => {
+		const renderTemplate = ctx.newFunction("render", (content, data) => {
 			const contentStr = ctx.dump(content);
 			const dataObj = ctx.dump(data);
 			const template = Handlebars.compile(contentStr);
 			return ctx.newString(template(dataObj));
 		});
 
-		const diceRoll = ctx.newFunction("diceRoll", (content) => {
+		const rollDice = ctx.newFunction("roll", (content) => {
 			const rollStr = ctx.dump(content);
 			const roll = new DiceRoll(rollStr);
 			const jsonString = roll.export();
@@ -59,13 +62,13 @@ export default class QuickJS {
 		});
 
 		ctx.setProp(consoleHandle, "log", log);
-		ctx.setProp(consoleHandle, "loadConfig", loadConfig);
-		ctx.setProp(consoleHandle, "renderTemplate", renderTemplate);
-		ctx.setProp(consoleHandle, "diceRoll", diceRoll);
+		ctx.setProp(consoleHandle, "load", loadConfig);
+		ctx.setProp(consoleHandle, "render", renderTemplate);
+		ctx.setProp(consoleHandle, "roll", rollDice);
 		ctx.setProp(ctx.global, "console", consoleHandle);
 
 		log.dispose();
-		diceRoll.dispose();
+		rollDice.dispose();
 		loadConfig.dispose();
 		renderTemplate.dispose();
 		consoleHandle.dispose();
@@ -103,7 +106,7 @@ export default class QuickJS {
 		if (!entryModule) {
 			throw new ScriptEvalError({
 				name: "Entry Module Not Found",
-				message: "Entry module not found, please check the entry module.",
+				message: "Entry module not found, please set/create the entry module.",
 			});
 		}
 
@@ -149,8 +152,7 @@ export default class QuickJS {
 			scriptHandle.dispose();
 			throw new ScriptEvalError({
 				name: "Default Script Not Exported",
-				stack: "You need export a default instance in the entry point.",
-				message: "Default class instance not exported",
+				message: "Default instance of the entry not exported",
 			});
 		}
 		let dataHandle;
@@ -160,7 +162,10 @@ export default class QuickJS {
 				dataHandle = this.context.newString(dataStr);
 			}
 		} catch (e) {
-			throw new Error("input JSON parse error: " + e);
+			throw new ScriptEvalError({
+				name: "JSON Data Parse Error",
+				message: e.message,
+			});
 		}
 
 		try {
@@ -174,10 +179,17 @@ export default class QuickJS {
 			callResult.dispose();
 			return dumpedData;
 		} catch (e) {
-			throw new ScriptEvalError({
-				name: "Method Call Error",
-				message: e.message,
-			});
+			if (e.message === "not a function") {
+				throw new ScriptEvalError({
+					name: "Method Not Found",
+					message: `Method not found: ${fnName}`,
+				});
+			} else {
+				throw new ScriptEvalError({
+					name: "Method Call Error",
+					message: e.message,
+				});
+			}
 		} finally {
 			if (dataHandle) dataHandle.dispose();
 			scriptHandle.dispose();

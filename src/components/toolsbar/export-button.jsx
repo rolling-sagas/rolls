@@ -2,6 +2,7 @@ import { useStore } from "@/lib/store";
 import JSZip from "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm";
 import fileSaver from "https://cdn.jsdelivr.net/npm/file-saver@2.0.5/+esm";
 import { ToolButton } from "./tool-button";
+import { toast } from "sonner";
 
 export const ExportButton = () => {
 	const handleExport = () => {
@@ -37,7 +38,7 @@ export const ExportButton = () => {
 			.then((content) => {
 				fileSaver.saveAs(content, "rs_template.zip");
 			})
-			.catch((e) => console.error(e));
+			.catch((e) => toast.error(e.message));
 	};
 
 	return (

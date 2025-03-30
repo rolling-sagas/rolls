@@ -40,7 +40,7 @@ export function clearAll() {
 	useStore.setState((state) => ({
 		messages: [],
 		modules: [],
-		templates: [],
+		configs: [],
 	}));
 }
 

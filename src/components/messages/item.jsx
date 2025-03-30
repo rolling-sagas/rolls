@@ -1,6 +1,8 @@
 import { memo, useMemo, useCallback } from "react";
 import { useStore } from "@/lib/store";
 import { useModalStore } from "@/components/modal";
+import { toast } from "sonner";
+
 import {
 	DropdownMenu,
 	DropdownTrigger,
@@ -95,9 +97,8 @@ export const Item = memo(({ ref, id, role, content, updatedAt, status }) => {
 					try {
 						await restartFromId(id);
 					} catch (error) {
-						openModal(
-							<AlertDialog message={error.message} title="Restart failed" />,
-						);
+						console.error(error);
+						toast.error(error.message);
 					}
 				}}
 			/>,
@@ -114,9 +115,7 @@ export const Item = memo(({ ref, id, role, content, updatedAt, status }) => {
 						await regenerate(id);
 					} catch (error) {
 						console.error(error);
-						openModal(
-							<AlertDialog message={error.message} title="Regenerate failed" />,
-						);
+						toast.error(error.message);
 					}
 				}}
 			/>,

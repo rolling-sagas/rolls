@@ -1,4 +1,5 @@
 import { useRef, useEffect, useMemo, useState, useCallback } from "react";
+import { toast } from "sonner";
 
 import {
 	ColumnBody,
@@ -141,7 +142,7 @@ const Messages = () => {
 					try {
 						await restart();
 					} catch (e) {
-						openModal(<AlertDialog title={e.title} message={e.message} />);
+						toast.error(e.message);
 					}
 				}}
 			/>,
@@ -157,7 +158,14 @@ const Messages = () => {
 	}, [messages]);
 
 	useEffect(() => {
-		initializeSandbox(modules, configs);
+		const init = async () => {
+			try {
+				await initializeSandbox(modules, configs);
+			} catch (e) {
+				toast.error(e.message);
+			}
+		};
+		init();
 	}, [modules, configs]);
 
 	useEffect(() => {

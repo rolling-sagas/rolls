@@ -99,7 +99,6 @@ async function streamOpenAI(messages, onMessage, key, model) {
 		model,
 		input: messages,
 		stream: true,
-		max_tokens: 4096,
 		text: { format: { type: "json_object" } },
 	});
 
@@ -119,27 +118,19 @@ async function streamOpenAI(messages, onMessage, key, model) {
 async function streamDeepSeek(messages, onMessage, key, model) {
 	const client = new OpenAI({
 		baseURL: "https://api.deepseek.com",
-		apiKey: key,
-		max_tokens: 4096,
+		apiKey: key, // This is the default and can be omitted
 		dangerouslyAllowBrowser: true,
 	});
 
-	const stream = await client.responses.create({
-		model,
-		input: messages,
-		stream: true,
-		text: { format: { type: "json_object" } },
+	const stream = await client.beta.chat.completions.stream({
+		model: model,
+		messages: messages,
+		response_format: { type: "json_object" },
 	});
 
-	for await (const event of stream) {
-		switch (event.type) {
-			case "response.output_text.delta":
-				onMessage(event.delta);
-				break;
-			case "error" || "response.error":
-				throw new LlmStreamError(event.code + ": " + event.message);
-			case "response.failed":
-				throw new LlmStreamError("Response failed");
+	for await (const chunk of stream) {
+		if (chunk.choices[0]?.delta?.content) {
+			onMessage(chunk.choices[0].delta.content);
 		}
 	}
 }

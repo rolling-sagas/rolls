@@ -3,6 +3,14 @@ import { useStore } from "@/lib/store";
 import { stream } from "@/lib/ai/index";
 import QuickJS from "@/lib/quickjs";
 
+export class MessageActionError extends Error {
+	constructor({ type, name, message }) {
+		super(message);
+		this.type = type || "MessageActionError";
+		this.name = name || "Message Action Error";
+	}
+}
+
 export async function recover() {
 	const sandbox = useStore.getState().sandbox;
 	if (sandbox) {
@@ -10,14 +18,22 @@ export async function recover() {
 	}
 }
 
+export function isEntry(content) {
+	return content.trim().split("\n")[0].toLowerCase().startsWith("// @entry");
+}
+
 // Sandbox Management
 export async function initializeSandbox(modules, configs) {
 	const entryModule = modules.find((s) => isEntry(s.content));
 
 	if (!entryModule) {
-		console.warn("No entry module found");
+		// console.warn("No entry module found");
 		useStore.setState({ sandbox: null });
-		return;
+		throw new MessageActionError({
+			type: "EntryNotFound",
+			name: "Entry Module Not Found",
+			message: "Entry module not found, create or set the entry module.",
+		});
 	}
 
 	// Clean up existing sandbox
@@ -27,7 +43,7 @@ export async function initializeSandbox(modules, configs) {
 	try {
 		// Create and initialize new sandbox
 		const newSandbox = new QuickJS();
-		await newSandbox.run(modules, configs, false);
+		await newSandbox.run(modules, configs);
 		useStore.setState({ sandbox: newSandbox });
 
 		// Start processing based on existing messages
@@ -182,10 +198,6 @@ export async function generateFromId(id) {
 		return;
 	}
 	await generate(messages);
-}
-
-export function isEntry(content) {
-	return content.trim().split("\n")[0].toLowerCase().startsWith("// @entry");
 }
 
 export function getLastAvatar(id, role) {

@@ -130,11 +130,11 @@ export const RollContent = ({ content }) => {
 export const ButtonContent = ({ content }) => {
 	return (
 		<>
-			<input type="hidden" name={content.name} value={content.value} />
+			<input type="hidden" name={content.name} defaultValue={content.value} />
 			<input
 				type="submit"
 				className="msg-button input-container"
-				value={content.label}
+				defaultValue={content.label}
 			/>
 		</>
 	);

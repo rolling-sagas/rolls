@@ -3,6 +3,7 @@ import { AlertDialog, useModalStore } from "@/components/modal";
 import { nanoid } from "nanoid";
 import JSZip from "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm";
 import { ToolButton } from "./tool-button";
+import { toast } from "sonner";
 
 export const ImportButton = () => {
 	const openModal = useModalStore((state) => state.openModal);
@@ -97,7 +98,7 @@ export const ImportButton = () => {
 									library: "modules",
 								});
 							} catch (e) {
-								console.error(e);
+								toast.error(e.message);
 							}
 						}
 					}}

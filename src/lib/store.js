@@ -26,6 +26,7 @@ export const useStore = create(
 				modules: state.modules,
 				configs: state.configs,
 
+				model: state.model,
 				playMode: state.playMode,
 				library: state.library,
 
