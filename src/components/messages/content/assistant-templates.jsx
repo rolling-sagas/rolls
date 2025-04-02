@@ -9,9 +9,11 @@ import { useCallback } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 
+import "./github-markdown.css";
+
 export const TextContent = ({ content }) => {
 	return (
-		<div className="msg-text">
+		<div className="msg-text markdown-body">
 			<Markdown>{content.value}</Markdown>
 		</div>
 	);
@@ -51,10 +53,15 @@ export const ImageContent = ({ content }) => {
 		if (!basePath) return;
 		const configName = basePath[0];
 		const config = configs.find((c) => c.name === configName);
-		if (!config) return;
+		if (!config) {
+			console.warn(`Config ${configName} not found`);
+			return;
+		}
+
 		const parsed = parse(config.content);
 		basePath = basePath.slice(1);
 		basePath = [...basePath, content.src];
+
 		return getValueByPath(parsed, basePath.join("."));
 	}, [content, configs]);
 

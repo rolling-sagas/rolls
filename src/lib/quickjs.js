@@ -26,6 +26,29 @@ export default class QuickJS {
 		const ctx = this.context;
 		const consoleHandle = ctx.newObject();
 
+		Handlebars.registerHelper("withConfig", function (path, options) {
+			let config = {};
+
+			try {
+				config = configs.find((conf) => conf.name === path);
+				const parsed = parse(config.content);
+				// Makes config available inside the block
+				return options.fn(parsed);
+			} catch (err) {
+				throw new Error(`Error loading config at ${path}:` + err);
+			}
+		});
+
+		Handlebars.registerHelper("eachKey", function (obj, options) {
+			let result = "";
+			for (const key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					result += options.fn({ key: key, value: obj[key] });
+				}
+			}
+			return result;
+		});
+
 		const log = ctx.newFunction("log", (...args) => {
 			const nativeArgs = args.map((arg) => ctx.dump(arg));
 			console.log("[QuickJS]", ...nativeArgs);

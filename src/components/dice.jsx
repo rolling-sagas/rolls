@@ -1,4 +1,4 @@
-import DiceBox from "https://unpkg.com/@3d-dice/dice-box@1.1.3/dist/dice-box.es.min.js";
+import DiceBox from "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
 import DiceParser from "@3d-dice/dice-parser-interface";
 
 const DP = new DiceParser();
@@ -47,12 +47,10 @@ const DiceBoxComponent = () => {
 		const initDiceBox = async () => {
 			const box = new DiceBox({
 				assetPath: "assets/",
-				origin: "https://unpkg.com/@3d-dice/dice-box@1.1.3/dist/",
+				origin: "https://cdn.jsdelivr.net/npm/@3d-dice/dice-box@1.1.4/dist/",
 				container: "#dice-box",
 				offscreen: true,
 				scale: 6,
-				// physics settings that must be set - defaults are buggy
-				// themeColor: "#3578E5",
 				throwForce: 5,
 				gravity: 1,
 				mass: 1,

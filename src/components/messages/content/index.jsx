@@ -32,7 +32,7 @@ const UserContentLine = ({ line }) => {
 
 	if (line.startsWith("HINT: ")) {
 		if (playMode) return null;
-		return <div className="rs-text-secondary">{line.substring(6)}</div>;
+		return <div className="rs-text-secondary line-clamp-3">{line.substring(6)}</div>;
 	}
 
 	return <div>{line}</div>;

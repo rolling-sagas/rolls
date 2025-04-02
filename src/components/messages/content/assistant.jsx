@@ -2,6 +2,7 @@ import { useModalStore, AlertDialog } from "@/components//modal";
 import { parse } from "best-effort-json-parser";
 import { useCallback, useMemo, memo } from "react";
 import { submit, recover } from "@/components/messages/actions";
+
 import {
 	ButtonContent,
 	ImageContent,
@@ -34,6 +35,7 @@ const AssistantContent = memo(({ id, content, status }) => {
 
 	const handleSubmit = useCallback(
 		async (formData) => {
+			if (status !== "finished") return;
 			const formObject = Object.fromEntries(formData);
 			try {
 				await submit(formObject);
@@ -48,7 +50,7 @@ const AssistantContent = memo(({ id, content, status }) => {
 				);
 			}
 		},
-		[openModal],
+		[openModal, status],
 	);
 
 	const parsedContent = useMemo(() => {

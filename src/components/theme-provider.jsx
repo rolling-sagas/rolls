@@ -40,7 +40,10 @@ export function ThemeProvider({
 
 		if (theme === "dark") {
 			root.classList.add("dark");
+			document.body.setAttribute("data-theme", "dark");
 			setDarkMode(true);
+		} else {
+			document.body.setAttribute("data-theme", "light");
 		}
 		// do nothing for the "light" theme
 	}, [theme]);
