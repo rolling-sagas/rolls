@@ -241,7 +241,7 @@ export function getLastDivider(id) {
 
 	const slice = messages.slice(0, index + 1);
 	const lastDividerMsg = slice.findLast((msg) => msg.role === "divider");
-	return lastDividerMsg.content;
+	return lastDividerMsg?.content;
 }
 
 export function addMessage(role, content, snapshot) {

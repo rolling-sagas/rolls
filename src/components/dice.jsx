@@ -82,7 +82,7 @@ const DiceBoxComponent = () => {
 
 		const values = state.results.map((result) => result.value);
 		const sum = values.reduce((acc, curr) => acc + curr, 0);
-		return values.join(" + ") + " = " + sum;
+		return values.join(", ");
 	});
 
 	return (
@@ -103,7 +103,7 @@ const DiceBoxComponent = () => {
 					className={`z-[42]! flex flex-col items-center justify-center w-full h-full font-bold transition-all duration-200 ease-in ${resultsStr ? "opacity-100 scale-100" : "opacity-0 scale-90"}`}
 				>
 					{resultsStr && (
-						<div className="p-6 rounded-3xl rs-bg-backdrop dark:bg-white/50 text-white text-2xl min-w-24 min-h-24 flex items-center justify-center">
+						<div className="p-6 rounded-3xl rs-bg-backdrop text-white text-2xl min-w-24 min-h-24 flex items-center justify-center">
 							{resultsStr}
 						</div>
 					)}

@@ -49,6 +49,10 @@ export default class QuickJS {
 			return result;
 		});
 
+		Handlebars.registerHelper("isEqual", function (a, b) {
+			return a === b;
+		});
+
 		const log = ctx.newFunction("log", (...args) => {
 			const nativeArgs = args.map((arg) => ctx.dump(arg));
 			console.log("[QuickJS]", ...nativeArgs);
@@ -202,6 +206,7 @@ export default class QuickJS {
 			callResult.dispose();
 			return dumpedData;
 		} catch (e) {
+			console.log(e);
 			if (e.message === "not a function") {
 				throw new ScriptEvalError({
 					name: "Method Not Found",

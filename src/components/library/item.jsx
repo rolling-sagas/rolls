@@ -12,9 +12,10 @@ import { UpdatedAt } from "@/components/updated-at";
 import { deleteItem } from "./actions";
 import { Content } from "./content";
 import { Editor } from "./editor";
+import { isEntry as entry } from "../messages/actions";
 
 export const Item = ({ item, library }) => {
-	const isEntry = item.content.startsWith("// @Entry");
+	const isEntry = entry(item.content);
 
 	const openModal = useModalStore((state) => state.openModal);
 	const itemName = library?.name.slice(0, -1);

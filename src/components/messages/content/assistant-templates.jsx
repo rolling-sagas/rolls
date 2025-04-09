@@ -106,8 +106,7 @@ export const RollContent = ({ content }) => {
 	const submitRef = useRef(null);
 
 	const callback = useCallback((results) => {
-		const sum = results.reduce((acc, curr) => acc + curr.value, 0);
-		setValue(sum);
+		setValue(results.map((result) => result.value).join(", "));
 	}, []);
 
 	useEffect(() => {
@@ -118,8 +117,7 @@ export const RollContent = ({ content }) => {
 
 	return (
 		<>
-			<input type="hidden" name={content.name} value={content.value} />
-			<input type="hidden" name="roll" value={value} />
+			<input type="hidden" name={content.name} value={value} />
 			<button
 				className="msg-button input-container"
 				onClick={async (evt) => {

@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 
 export const UpdatedAt = ({ timestamp }) => {
-	const [timeAgo, setTimeAgo] = useState(() => formatDistanceToNow(timestamp));
+	const [timeAgo, setTimeAgo] = useState(() => {
+		try {
+			return formatDistanceToNow(timestamp);
+		} catch (e) {
+			return "Invalid date";
+		}
+	});
 
 	useEffect(() => {
 		// Update the time immediately on mount
