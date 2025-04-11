@@ -9,6 +9,7 @@ import {
 	InputContent,
 	RollContent,
 	SelectContent,
+	MultiSelectContent,
 	TextContent,
 } from "./assistant-templates";
 
@@ -30,13 +31,40 @@ const ErrorDisplay = ({ error }) => (
 	</div>
 );
 
+function formDataToObject(formData) {
+	const obj = {};
+
+	for (const [key, value] of formData.entries()) {
+		// Handle array-style names like "items[]"
+		if (key.endsWith("[]")) {
+			const realKey = key.slice(0, -2);
+			if (!obj[realKey]) {
+				obj[realKey] = [];
+			}
+			obj[realKey].push(value);
+		} else {
+			// Handle single-value fields
+			if (obj[key] !== undefined) {
+				// If already exists, convert to array
+				obj[key] = Array.isArray(obj[key])
+					? [...obj[key], value]
+					: [obj[key], value];
+			} else {
+				obj[key] = value;
+			}
+		}
+	}
+
+	return obj;
+}
+
 const AssistantContent = memo(({ id, content, status }) => {
 	const openModal = useModalStore((state) => state.openModal);
 
 	const handleSubmit = useCallback(
 		async (formData) => {
 			if (status !== "finished") return;
-			const formObject = Object.fromEntries(formData);
+			const formObject = formDataToObject(formData);
 			try {
 				await submit(formObject);
 			} catch (error) {
@@ -84,6 +112,9 @@ const AssistantContent = memo(({ id, content, status }) => {
 							}
 							if (content.type === "select") {
 								return <SelectContent key={key} content={content} />;
+							}
+							if (content.type === "multi-select") {
+								return <MultiSelectContent key={key} content={content} />;
 							}
 							if (content.type === "image") {
 								return <ImageContent key={key} content={content} />;

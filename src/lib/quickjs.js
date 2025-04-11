@@ -27,15 +27,15 @@ export default class QuickJS {
 		const consoleHandle = ctx.newObject();
 
 		Handlebars.registerHelper("withConfig", function (path, options) {
-			let config = {};
-
 			try {
-				config = configs.find((conf) => conf.name === path);
+				const config = configs.find((conf) => conf.name === path);
+				if (!config) throw new Error(`Config not found: ${path}`);
 				const parsed = parse(config.content);
 				// Makes config available inside the block
 				return options.fn(parsed);
 			} catch (err) {
-				throw new Error(`Error loading config at ${path}:` + err);
+				console.warn(err);
+				return options.fn();
 			}
 		});
 

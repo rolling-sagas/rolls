@@ -57,6 +57,11 @@
 
 .msg-button {
 	@apply border-[0.5px] flex items-center justify-start px-3 py-2 rounded-[12px] cursor-pointer font-semibold;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.msg-button.selected {
+	@apply bg-blue-400 text-black;
 }
 
 .msg-hidden {

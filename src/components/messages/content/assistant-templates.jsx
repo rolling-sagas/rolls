@@ -8,6 +8,7 @@ import { useRollDice } from "@/components/dice";
 import { useCallback } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
+import { nanoid } from "nanoid";
 
 import "./github-markdown.css";
 
@@ -94,6 +95,65 @@ export const SelectContent = ({ content }) => {
 						{option.label}
 					</button>
 				))}
+		</div>
+	);
+};
+
+export const MultiSelectContent = ({ content }) => {
+	const [selectedValues, setSelectedValues] = useState([]);
+
+	const toggleValue = (val) => {
+		setSelectedValues((prev) => {
+			if (prev.includes(val)) {
+				return prev.filter((v) => v !== val);
+			} else if (!content.select || prev.length < content.select) {
+				return [...prev, val];
+			}
+			return prev;
+		});
+	};
+
+	const isSubmitDisabled = content.select
+		? selectedValues.length < content.select
+		: false;
+
+	return (
+		<div className="msg-vbox input-container">
+			{/* Create one hidden input per selected value */}
+			{selectedValues.map((val, idx) => (
+				<input key={idx} type="hidden" name={`${content.name}[]`} value={val} />
+			))}
+			<div className="flex flex-wrap gap-2">
+				{content.options?.map((option, idx) => {
+					const val = option.short || option.value;
+					const isSelected = selectedValues.includes(val);
+					const id = `${nanoid()}-${idx}`;
+					return (
+						<div key={idx} className="msg-checkbox-wrapper">
+							<input
+								type="checkbox"
+								id={id}
+								checked={isSelected}
+								onChange={() => toggleValue(val)}
+								className="hidden"
+							/>
+							<label
+								htmlFor={id}
+								className={`msg-button ${isSelected ? "selected" : ""}`}
+							>
+								{option.label}
+							</label>
+						</div>
+					);
+				})}
+			</div>
+			<button
+				type="submit"
+				className="msg-button mt-4 justify-center!"
+				disabled={isSubmitDisabled}
+			>
+				Submit
+			</button>
 		</div>
 	);
 };
