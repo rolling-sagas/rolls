@@ -11,6 +11,9 @@ importers:
       '@3d-dice/dice-parser-interface':
         specifier: ^0.2.1
         version: 0.2.1
+      '@azure/openai':
+        specifier: ^2.0.0
+        version: 2.0.0
       best-effort-json-parser:
         specifier: ^1.1.3
         version: 1.1.3
@@ -74,6 +77,38 @@ packages:
 
   '@3d-dice/dice-roller-parser@0.2.6':
     resolution: {integrity: sha512-9dMSX0bqKZ5BQ+HABE4c4ZY1/VPUqtQd+gXKAHPMcFbY3cCMOPy327ZQ/LHdptS7VNZCGPriybIQrg7efYIQEw==}
+
+  '@azure-rest/core-client@2.4.0':
+    resolution: {integrity: sha512-CjMFBcmnt0YNdRcxSSoZbtZNXudLlicdml7UrPsV03nHiWB+Bq5cu5ctieyaCuRtU7jm7+SOFtiE/g4pBFPKKA==}
+    engines: {node: '>=18.0.0'}
+
+  '@azure/abort-controller@2.1.2':
+    resolution: {integrity: sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA==}
+    engines: {node: '>=18.0.0'}
+
+  '@azure/core-auth@1.9.0':
+    resolution: {integrity: sha512-FPwHpZywuyasDSLMqJ6fhbOK3TqUdviZNF8OqRGA4W5Ewib2lEEZ+pBsYcBa88B2NGO/SEnYPGhyBqNlE8ilSw==}
+    engines: {node: '>=18.0.0'}
+
+  '@azure/core-rest-pipeline@1.21.0':
+    resolution: {integrity: sha512-a4MBwe/5WKbq9MIxikzgxLBbruC5qlkFYlBdI7Ev50Y7ib5Vo/Jvt5jnJo7NaWeJ908LCHL0S1Us4UMf1VoTfg==}
+    engines: {node: '>=18.0.0'}
+
+  '@azure/core-tracing@1.2.0':
+    resolution: {integrity: sha512-UKTiEJPkWcESPYJz3X5uKRYyOcJD+4nYph+KpfdPRnQJVrZfk0KJgdnaAWKfhsBBtAf/D58Az4AvCJEmWgIBAg==}
+    engines: {node: '>=18.0.0'}
+
+  '@azure/core-util@1.12.0':
+    resolution: {integrity: sha512-13IyjTQgABPARvG90+N2dXpC+hwp466XCdQXPCRlbWHgd3SJd5Q1VvaBGv6k1BIa4MQm6hAF1UBU1m8QUxV8sQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@azure/logger@1.2.0':
+    resolution: {integrity: sha512-0hKEzLhpw+ZTAfNJyRrn6s+V0nDWzXk9OjBr2TiGIu0OfMr5s2V4FpKLTAK3Ca5r5OKLbf4hkOGDPyiRjie/jA==}
+    engines: {node: '>=18.0.0'}
+
+  '@azure/openai@2.0.0':
+    resolution: {integrity: sha512-zSNhwarYbqg3P048uKMjEjbge41OnAgmiiE1elCHVsuCCXRyz2BXnHMJkW6WR6ZKQy5NHswJNUNSWsuqancqFA==}
+    engines: {node: '>=18.0.0'}
 
   '@cloudflare/kv-asset-handler@0.3.4':
     resolution: {integrity: sha512-YLPHc8yASwjNkmcDMQMY35yiWjoKAKnhUbPRszBRS0YgH+IXtsMp61j+yTcnCE3oO2DgP0U3iejLC8FTtKDC8Q==}
@@ -688,6 +723,10 @@ packages:
   '@types/react@19.0.10':
     resolution: {integrity: sha512-JuRQ9KXLEjaUNjTWpzuR231Z2WpIwczOkBEIvbHNCzQefFIT0L8IqE6NV6ULLyC1SI/i234JnDoMkfg+RjQj2g==}
 
+  '@typespec/ts-http-runtime@0.2.3':
+    resolution: {integrity: sha512-oRhjSzcVjX8ExyaF8hC0zzTqxlVuRlgMHL/Bh4w3xB9+wjbm0FpXylVU/lBrn+kgphwYTrOk3tp+AVShGmlYCg==}
+    engines: {node: '>=18.0.0'}
+
   '@vitejs/plugin-react-swc@3.7.2':
     resolution: {integrity: sha512-y0byko2b2tSVVf5Gpng1eEhX1OvPC7x8yns1Fx8jDzlJp4LS6CMkCPfLw47cjyoMrshQDoQw4qcgjsU9VvlCew==}
     peerDependencies:
@@ -701,6 +740,10 @@ packages:
     resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  agent-base@7.1.3:
+    resolution: {integrity: sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==}
+    engines: {node: '>= 14'}
 
   as-table@1.0.55:
     resolution: {integrity: sha512-xvsWESUJn0JN421Xb9MQw6AsMHRCUknCe0Wjlxvjud80mU4E6hQf1A6NzQKcYNmYw62MfzEtXc+badstZP3JpQ==}
@@ -822,6 +865,14 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
+
+  http-proxy-agent@7.0.2:
+    resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
+    engines: {node: '>= 14'}
+
+  https-proxy-agent@7.0.6:
+    resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
+    engines: {node: '>= 14'}
 
   is-core-module@2.16.1:
     resolution: {integrity: sha512-UfoeMA6fIJ8wTYFEUjelnaGI67v6+N7qXJEvQuIGa99l4xsCruSYOVSQ0uPANn4dAzm8lkYPaKLrrijLq7x23w==}
@@ -1172,6 +1223,67 @@ snapshots:
       '@3d-dice/dice-roller-parser': 0.2.6
 
   '@3d-dice/dice-roller-parser@0.2.6': {}
+
+  '@azure-rest/core-client@2.4.0':
+    dependencies:
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-auth': 1.9.0
+      '@azure/core-rest-pipeline': 1.21.0
+      '@azure/core-tracing': 1.2.0
+      '@typespec/ts-http-runtime': 0.2.3
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@azure/abort-controller@2.1.2':
+    dependencies:
+      tslib: 2.8.1
+
+  '@azure/core-auth@1.9.0':
+    dependencies:
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-util': 1.12.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@azure/core-rest-pipeline@1.21.0':
+    dependencies:
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-auth': 1.9.0
+      '@azure/core-tracing': 1.2.0
+      '@azure/core-util': 1.12.0
+      '@azure/logger': 1.2.0
+      '@typespec/ts-http-runtime': 0.2.3
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@azure/core-tracing@1.2.0':
+    dependencies:
+      tslib: 2.8.1
+
+  '@azure/core-util@1.12.0':
+    dependencies:
+      '@azure/abort-controller': 2.1.2
+      '@typespec/ts-http-runtime': 0.2.3
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@azure/logger@1.2.0':
+    dependencies:
+      '@typespec/ts-http-runtime': 0.2.3
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@azure/openai@2.0.0':
+    dependencies:
+      '@azure-rest/core-client': 2.4.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@cloudflare/kv-asset-handler@0.3.4':
     dependencies:
@@ -1548,6 +1660,14 @@ snapshots:
     dependencies:
       csstype: 3.1.3
 
+  '@typespec/ts-http-runtime@0.2.3':
+    dependencies:
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.6
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
   '@vitejs/plugin-react-swc@3.7.2(vite@6.0.6(@types/node@22.10.2)(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.1))':
     dependencies:
       '@swc/core': 1.10.4
@@ -1560,6 +1680,8 @@ snapshots:
       acorn: 8.14.0
 
   acorn@8.14.0: {}
+
+  agent-base@7.1.3: {}
 
   as-table@1.0.55:
     dependencies:
@@ -1704,6 +1826,20 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  http-proxy-agent@7.0.2:
+    dependencies:
+      agent-base: 7.1.3
+      debug: 4.4.0
+    transitivePeerDependencies:
+      - supports-color
+
+  https-proxy-agent@7.0.6:
+    dependencies:
+      agent-base: 7.1.3
+      debug: 4.4.0
+    transitivePeerDependencies:
+      - supports-color
 
   is-core-module@2.16.1:
     dependencies:
