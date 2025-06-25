@@ -8,7 +8,7 @@ export const useStore = create(
       modules: [],
       configs: [],
 
-      model: "GPT-4o Mini",
+      model: "OpenAI GPT-4.1",
       playMode: false,
       library: "modules",
 
