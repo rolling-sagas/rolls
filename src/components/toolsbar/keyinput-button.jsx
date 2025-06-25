@@ -21,7 +21,7 @@ const KeyInputDialog = ({ onCancel }) => {
 
   const openai = useStore((state) => state.openai_api_key);
   const azure = useStore((state) => state.azure_api_key);
-  const azureEndpoint = useStore((state) => state.azure_endpont);
+  const azureEndpoint = useStore((state) => state.azure_endpoint);
   const deepseek = useStore((state) => state.deepseek_api_key);
   const anthropic = useStore((state) => state.anthropic_api_key);
 

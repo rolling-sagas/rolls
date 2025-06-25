@@ -45,8 +45,14 @@ export async function stream(messages, onMessage, skipCache) {
       );
       break;
     case "azure":
+      const endpoint = useStore.getState().azure_endpoint.trim();
+      if (!key) {
+        throw new LlmStreamError(
+          `Azure resource endpoint not found, Add it in the key list`,
+        );
+      }
       await streamWithTimeout(() =>
-        streamAzure(filtered, onMessage, key, model.value),
+        streamAzure(filtered, onMessage, key, endpoint, model.value),
       );
       break;
     case "deepseek":
@@ -121,10 +127,10 @@ async function streamOpenAI(messages, onMessage, key, model) {
   }
 }
 
-async function streamAzure(messages, onMessage, key, model) {
+async function streamAzure(messages, onMessage, key, endpoint, model) {
   const client = new AzureOpenAI({
     apiKey: key, dangerouslyAllowBrowser: true,
-    endpoint: "https://dreameopenai04.openai.azure.com/",
+    endpoint: endpoint,
     apiVersion: "2025-03-01-preview",
   });
 
