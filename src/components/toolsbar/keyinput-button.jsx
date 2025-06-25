@@ -5,10 +5,11 @@ import { ToolButton } from "./tool-button";
 import { useModalStore } from "@/components/modal";
 import { useRef } from "react";
 
-const saveKeys = (openai, azure, deepseek, anthropic) => {
+const saveKeys = (openai, azure, azureEndpoint, deepseek, anthropic) => {
   useStore.setState({
     openai_api_key: openai,
     azure_api_key: azure,
+    azure_endpoint: azureEndpoint,
     deepseek_api_key: deepseek,
     anthropic_api_key: anthropic,
   });
@@ -20,6 +21,7 @@ const KeyInputDialog = ({ onCancel }) => {
 
   const openai = useStore((state) => state.openai_api_key);
   const azure = useStore((state) => state.azure_api_key);
+  const azureEndpoint = useStore((state) => state.azure_endpont);
   const deepseek = useStore((state) => state.deepseek_api_key);
   const anthropic = useStore((state) => state.anthropic_api_key);
 
@@ -29,7 +31,7 @@ const KeyInputDialog = ({ onCancel }) => {
 
     const formData = new FormData(form);
     const formObject = Object.fromEntries(formData.entries());
-    saveKeys(formObject.openai, formObject.azure, formObject.deepseek, formObject.anthropic);
+    saveKeys(formObject.openai, formObject.azure, formObject.azureEndpoint, formObject.deepseek, formObject.anthropic);
 
     closeModal();
   };
@@ -64,6 +66,13 @@ const KeyInputDialog = ({ onCancel }) => {
           name="azure"
           defaultValue={azure}
           placeholder="Enter your Azure API key"
+          className="w-full border-[0.5px] rs-outline-primary px-3 py-2 rounded-xl outline-none mb-4"
+        />
+        <input
+          type="text"
+          name="azureEndpoint"
+          defaultValue={azureEndpoint}
+          placeholder="Azure Resource Endpoint"
           className="w-full border-[0.5px] rs-outline-primary px-3 py-2 rounded-xl outline-none mb-4"
         />
         <label className="text-xs rs-text-charcoal mb-2">

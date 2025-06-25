@@ -17,6 +17,7 @@ export const useStore = create(
 
       openai_api_key: "",
       azure_api_key: "",
+      azure_endpoint: "",
       deepseek_api_key: "",
       anthropic_api_key: "",
     }),
@@ -32,7 +33,10 @@ export const useStore = create(
         library: state.library,
 
         openai_api_key: state.openai_api_key,
+
         azure_api_key: state.azure_api_key,
+        azure_endpoint: state.azure_endpoint,
+
         deepseek_api_key: state.deepseek_api_key,
         claude_api_key: state.claude_api_key,
       }),
