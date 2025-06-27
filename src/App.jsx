@@ -12,25 +12,25 @@ import DiceBoxComponent from "./components/dice";
 import { useTheme } from "@/components/theme-provider";
 
 const ToasterContainer = () => {
-	const { darkMode } = useTheme();
-	const theme = useMemo(() => (darkMode ? "dark" : "light"), [darkMode]);
-	return <Toaster theme={theme} />;
+  const { darkMode } = useTheme();
+  const theme = useMemo(() => (darkMode ? "dark" : "light"), [darkMode]);
+  return <Toaster theme={theme} />;
 };
 
 function App() {
-	const playMode = useStore((state) => state.playMode);
-	return (
-		<ThemeProvider defaultTheme="system">
-			<ToolsBar />
-			<Columns>
-				<Messages />
-				{!playMode && <Library />}
-			</Columns>
-			<DiceBoxComponent />
-			<Modal />
-			<ToasterContainer />
-		</ThemeProvider>
-	);
+  const playMode = useStore((state) => state.playMode);
+  return (
+    <ThemeProvider defaultTheme="system">
+      <ToolsBar />
+      <Columns>
+        <Messages />
+        {!playMode && <Library />}
+      </Columns>
+      <DiceBoxComponent />
+      <Modal />
+      <ToasterContainer />
+    </ThemeProvider>
+  );
 }
 
 export default App;
