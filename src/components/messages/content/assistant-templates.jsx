@@ -12,6 +12,7 @@ import { nanoid } from "nanoid";
 
 import "./github-markdown.css";
 
+// Steamer special UI
 export const ActionContent = ({ value }) => {
   return (
     <div className="text-sm rs-bg-secondary rs-text-secondary rounded-2xl p-2 flex gap-2 items-center">
