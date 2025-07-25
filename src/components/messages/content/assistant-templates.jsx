@@ -12,6 +12,33 @@ import { nanoid } from "nanoid";
 
 import "./github-markdown.css";
 
+export const ActionContent = ({ value }) => {
+  return (
+    <div className="text-sm rs-bg-secondary rs-text-secondary rounded-2xl p-2 flex gap-2 items-center">
+      <div>{value}</div>
+    </div>
+  );
+}
+
+export const SpeechContent = ({ value }) => {
+  return (
+    <div className="msg-text markdown-body rounded-2xl flex gap-2 items-center">
+      <div>{value}</div>
+    </div>
+  );
+}
+
+export const MiscContent = ({ value }) => {
+  return (
+    <div className="text-xs flex gap-2 items-center">
+      {value.content_type && (<span className="text-xs text-secondary px-2 py-1 rounded border">{value.content_type}</span>)}
+      {value.mood && (<span className="text-xs text-secondary px-2 py-1 rounded border">{value.mood}</span>)}
+      {value.energy && (<span className="text-xs text-secondary px-2 py-1 rounded border">{value.energy}</span>)}
+      {value.intimacy_change && (<span className="text-xs text-secondary px-2 py-1 rounded border">{value.intimacy_change > 0 ? "+" + value.intimacy_change : value.intimacy_change}</span>)}
+    </div>
+  );
+}
+
 export const TextContent = ({ content }) => {
   return (
     <div className="msg-text markdown-body">

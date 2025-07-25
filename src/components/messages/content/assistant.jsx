@@ -4,134 +4,232 @@ import { useCallback, useMemo, memo } from "react";
 import { submit, recover } from "@/components/messages/actions";
 
 import {
-	ButtonContent,
-	ImageContent,
-	InputContent,
-	RollContent,
-	SelectContent,
-	MultiSelectContent,
-	TextContent,
+  ActionContent,
+  SpeechContent,
+  MiscContent,
+
+  ButtonContent,
+  ImageContent,
+  InputContent,
+  RollContent,
+  SelectContent,
+  MultiSelectContent,
+  TextContent,
 } from "./assistant-templates";
 
 // Status Badge Component
 const StatusBadge = ({ status }) => {
-	if (!["loading", "generating"].includes(status)) return null;
+  if (!["loading", "generating"].includes(status)) return null;
 
-	return (
-		<div className="rs-text-secondary text-sm font-semibold border-[0.5px] rounded w-fit px-2 py-1 capitalize mt-2">
-			{status}
-		</div>
-	);
+  return (
+    <div className="rs-text-secondary text-sm font-semibold border-[0.5px] rounded w-fit px-2 py-1 capitalize mt-2">
+      {status}
+    </div>
+  );
 };
 
 // Error Display Component
 const ErrorDisplay = ({ error }) => (
-	<div className="mt-4 rounded-[12px] border border-red-400 text-red-400 px-2 py-3 font-semibold">
-		{error}
-	</div>
+  <div className="mt-4 rounded-[12px] border border-red-400 text-red-400 px-2 py-3 font-semibold">
+    {error}
+  </div>
 );
 
 function formDataToObject(formData) {
-	const obj = {};
+  const obj = {};
 
-	for (const [key, value] of formData.entries()) {
-		// Handle array-style names like "items[]"
-		if (key.endsWith("[]")) {
-			const realKey = key.slice(0, -2);
-			if (!obj[realKey]) {
-				obj[realKey] = [];
-			}
-			obj[realKey].push(value);
-		} else {
-			// Handle single-value fields
-			if (obj[key] !== undefined) {
-				// If already exists, convert to array
-				obj[key] = Array.isArray(obj[key])
-					? [...obj[key], value]
-					: [obj[key], value];
-			} else {
-				obj[key] = value;
-			}
-		}
-	}
+  for (const [key, value] of formData.entries()) {
+    // Handle array-style names like "items[]"
+    if (key.endsWith("[]")) {
+      const realKey = key.slice(0, -2);
+      if (!obj[realKey]) {
+        obj[realKey] = [];
+      }
+      obj[realKey].push(value);
+    } else {
+      // Handle single-value fields
+      if (obj[key] !== undefined) {
+        // If already exists, convert to array
+        obj[key] = Array.isArray(obj[key])
+          ? [...obj[key], value]
+          : [obj[key], value];
+      } else {
+        obj[key] = value;
+      }
+    }
+  }
 
-	return obj;
+  return obj;
 }
 
+export const StreamerContent = memo(({ id, content, status }) => {
+  const openModal = useModalStore((state) => state.openModal);
+
+  const handleSubmit = useCallback(
+    async (formData) => {
+      if (status !== "finished") return;
+      const formObject = formDataToObject(formData);
+      try {
+        await submit(formObject);
+      } catch (error) {
+        console.error(error);
+        openModal(
+          <AlertDialog
+            title="Submit failed"
+            message={error.message}
+            onContinue={async () => await recover()}
+          />,
+        );
+      }
+    },
+    [openModal, status],
+  );
+
+  const parsedContent = useMemo(() => {
+    try {
+      const cleanContent = content
+        .replace(/^```json/g, "")
+        .replace(/```$/g, "");
+      return parse(cleanContent);
+    } catch (error) {
+      console.warn("Invalid JSON:", error);
+      return null;
+    }
+  }, [content]);
+
+  if (parsedContent?.error) {
+    return <ErrorDisplay error={parsedContent.error} />;
+  }
+
+  return (
+    <>
+      {parsedContent && (
+        <div className="flex flex-col gap-2 mt-2">
+          <form action={handleSubmit} className="msg-content !gap-2">
+            {parsedContent.speech && (
+              <SpeechContent value={parsedContent.speech} />
+            )}
+            {parsedContent.action && (
+              <ActionContent value={parsedContent.action} />
+            )}
+            {parsedContent && (
+              <MiscContent value={parsedContent} />
+            )}
+            <div className="msg-hbox input-container">
+              <input
+                type="text"
+                name={"viewer_input"}
+                className="msg-input"
+                placeholder={"just say something..."}
+              />
+              <input type="submit" value="OK" className="msg-button" />
+            </div>
+            {/* {parsedContent.views.map((content, idx) => { */}
+            {/*   const key = id + ":" + idx; */}
+            {/*   if (content.type === "text") { */}
+            {/*     return <TextContent key={key} content={content} />; */}
+            {/*   } */}
+            {/*   if (content.type === "input") { */}
+            {/*     return <InputContent key={key} content={content} />; */}
+            {/*   } */}
+            {/*   if (content.type === "select") { */}
+            {/*     return <SelectContent key={key} content={content} />; */}
+            {/*   } */}
+            {/*   if (content.type === "multi-select") { */}
+            {/*     return <MultiSelectContent key={key} content={content} />; */}
+            {/*   } */}
+            {/*   if (content.type === "image") { */}
+            {/*     return <ImageContent key={key} content={content} />; */}
+            {/*   } */}
+            {/*   if (content.type === "button") { */}
+            {/*     return <ButtonContent key={key} content={content} />; */}
+            {/*   } */}
+            {/*   if (content.type === "roll") { */}
+            {/*     return <RollContent key={key} content={content} />; */}
+            {/*   } */}
+            {/* })} */}
+          </form>
+        </div>
+      )}
+      <StatusBadge status={status} />
+    </>
+  );
+})
+
 const AssistantContent = memo(({ id, content, status }) => {
-	const openModal = useModalStore((state) => state.openModal);
+  const openModal = useModalStore((state) => state.openModal);
 
-	const handleSubmit = useCallback(
-		async (formData) => {
-			if (status !== "finished") return;
-			const formObject = formDataToObject(formData);
-			try {
-				await submit(formObject);
-			} catch (error) {
-				console.error(error);
-				openModal(
-					<AlertDialog
-						title="Submit failed"
-						message={error.message}
-						onContinue={async () => await recover()}
-					/>,
-				);
-			}
-		},
-		[openModal, status],
-	);
+  const handleSubmit = useCallback(
+    async (formData) => {
+      if (status !== "finished") return;
+      const formObject = formDataToObject(formData);
+      try {
+        await submit(formObject);
+      } catch (error) {
+        console.error(error);
+        openModal(
+          <AlertDialog
+            title="Submit failed"
+            message={error.message}
+            onContinue={async () => await recover()}
+          />,
+        );
+      }
+    },
+    [openModal, status],
+  );
 
-	const parsedContent = useMemo(() => {
-		try {
-			const cleanContent = content
-				.replace(/^```json/g, "")
-				.replace(/```$/g, "");
-			return parse(cleanContent);
-		} catch (error) {
-			console.warn("Invalid JSON:", error);
-			return null;
-		}
-	}, [content]);
+  const parsedContent = useMemo(() => {
+    try {
+      const cleanContent = content
+        .replace(/^```json/g, "")
+        .replace(/```$/g, "");
+      return parse(cleanContent);
+    } catch (error) {
+      console.warn("Invalid JSON:", error);
+      return null;
+    }
+  }, [content]);
 
-	if (parsedContent?.error) {
-		return <ErrorDisplay error={parsedContent.error} />;
-	}
+  if (parsedContent?.error) {
+    return <ErrorDisplay error={parsedContent.error} />;
+  }
 
-	return (
-		<>
-			{parsedContent?.views && parsedContent.views?.length > 0 && (
-				<div className="flex flex-col gap-2 mt-2">
-					<form action={handleSubmit} className="msg-content">
-						{parsedContent.views.map((content, idx) => {
-							const key = id + ":" + idx;
-							if (content.type === "text") {
-								return <TextContent key={key} content={content} />;
-							}
-							if (content.type === "input") {
-								return <InputContent key={key} content={content} />;
-							}
-							if (content.type === "select") {
-								return <SelectContent key={key} content={content} />;
-							}
-							if (content.type === "multi-select") {
-								return <MultiSelectContent key={key} content={content} />;
-							}
-							if (content.type === "image") {
-								return <ImageContent key={key} content={content} />;
-							}
-							if (content.type === "button") {
-								return <ButtonContent key={key} content={content} />;
-							}
-							if (content.type === "roll") {
-								return <RollContent key={key} content={content} />;
-							}
-						})}
-					</form>
-				</div>
-			)}
-			<StatusBadge status={status} />
-		</>
-	);
+  return (
+    <>
+      {parsedContent?.views && parsedContent.views?.length > 0 && (
+        <div className="flex flex-col gap-2 mt-2">
+          <form action={handleSubmit} className="msg-content">
+            {parsedContent.views.map((content, idx) => {
+              const key = id + ":" + idx;
+              if (content.type === "text") {
+                return <TextContent key={key} content={content} />;
+              }
+              if (content.type === "input") {
+                return <InputContent key={key} content={content} />;
+              }
+              if (content.type === "select") {
+                return <SelectContent key={key} content={content} />;
+              }
+              if (content.type === "multi-select") {
+                return <MultiSelectContent key={key} content={content} />;
+              }
+              if (content.type === "image") {
+                return <ImageContent key={key} content={content} />;
+              }
+              if (content.type === "button") {
+                return <ButtonContent key={key} content={content} />;
+              }
+              if (content.type === "roll") {
+                return <RollContent key={key} content={content} />;
+              }
+            })}
+          </form>
+        </div>
+      )}
+      <StatusBadge status={status} />
+    </>
+  );
 });
 
 export default AssistantContent;

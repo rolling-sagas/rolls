@@ -49,7 +49,7 @@ const KeyInputDialog = ({ onCancel }) => {
         ref={formRef}
       >
         <label className="text-xs rs-text-charcoal mb-2">
-          OpenAI (gpt-4o-mini)
+          OpenAI
         </label>
         <input
           type="text"

@@ -11,7 +11,7 @@ export class LlmStreamError extends Error {
 }
 
 export const models = [
-  { name: "OpenAI GPT-4.1", provider: "openai", value: "gpt-4.1" },
+  { name: "OpenAI GPT-4o", provider: "openai", value: "gpt-4o" },
   { name: "Azure GPT-4.1", provider: "azure", value: "gpt-4.1" },
   { name: "DeepSeek v3", provider: "deepseek", value: "deepseek-chat" },
   {
